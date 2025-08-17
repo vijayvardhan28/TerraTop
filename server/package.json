@@ -1,0 +1,32 @@
+{
+  "name": "terracetop-server",
+  "version": "1.0.0",
+  "description": "Backend server for TerraceTop urban farming platform",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "mongoose": "^8.17.1",
+    "bcryptjs": "^3.0.2",
+    "jsonwebtoken": "^9.0.2",
+    "nodemailer": "^7.0.5",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  },
+  "keywords": [
+    "urban-farming",
+    "terrace-top",
+    "nodejs",
+    "express",
+    "mongodb"
+  ],
+  "author": "TerraceTop Team",
+  "license": "MIT"
+}
