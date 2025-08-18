@@ -39,7 +39,7 @@ const TerraStore = () => {
         };
 
         if (searchTerm) params.search = searchTerm;
-        if (selectedCategory && selectedCategory !== 'All') params.category = selectedCategory;
+        if (selectedCategory && selectedCategory !== 'All') params.category = selectedCategory.toLowerCase();
 
         const { data } = await api.get('/products', { params });
         setProducts(data?.products || []);

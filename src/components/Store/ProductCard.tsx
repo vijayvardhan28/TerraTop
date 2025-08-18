@@ -14,7 +14,7 @@ interface ProductCardProps {
     description?: string;
     price: number;
     category?: string;
-    images?: string[];
+    image: string;
     isDiscounted?: boolean;
     discountPercentage?: number;
     isNewlyLaunched?: boolean;
@@ -63,9 +63,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
       <Link to={`/products/${product._id}`}>
         <div className="h-48 bg-gray-100 flex items-center justify-center">
-          {product.images && product.images.length > 0 ? (
+          {product.image && product.image.length > 0 ? (
             <img 
-              src={product.images[0]} 
+              src={product.image} 
               alt={product.name} 
               className="h-full w-full object-cover"
             />
