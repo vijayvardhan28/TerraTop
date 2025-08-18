@@ -31,7 +31,7 @@ router.get('/', async (req, res) => {
 
     // Category filter
     if (category) {
-      query.category = category;
+      query.category = { $regex: `^${category}$`, $options: 'i' };
     }
 
     // Special filters
