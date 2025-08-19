@@ -38,17 +38,25 @@ const Register = () => {
   }, [error, dispatch]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-  };
+  // Client-side validation to ensure only numbers are entered
+  const { name, value } = e.target;
+  if (name === 'phone') {
+    const numericValue = value.replace(/[^0-9]/g, '');
+    setFormData({ ...formData, [name]: numericValue.slice(0, 10) });
+  } else {
+    setFormData({ ...formData, [name]: value });
+  }
+};
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!formData.name || !formData.email || !formData.phone || !formData.password) {
       toast.error('Please fill in all fields');
+      return;
+    }
+    if (formData.phone.length !== 10) {
+      toast.error('Phone number must be exactly 10 digits');
       return;
     }
 
@@ -142,6 +150,9 @@ const Register = () => {
                     name="phone"
                     type="tel"
                     required
+                    pattern="[0-9]{10}"
+                    minLength={10}
+                    maxLength={10}
                     value={formData.phone}
                     onChange={handleChange}
                     className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
