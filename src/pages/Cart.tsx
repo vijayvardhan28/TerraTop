@@ -257,9 +257,10 @@ const Cart = () => {
   useEffect(() => {
     dispatch(fetchCart());
   }, [dispatch]);
+
   useEffect(() => {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }, []);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
 
   const handleRemoveItem = async (itemId: string) => {
     try {
@@ -282,7 +283,7 @@ const Cart = () => {
   const calculateTotal = () => {
     return items.reduce((total, item) => {
       const price = item.product?.price || item.terrakit?.totalPrice || 0;
-      return total + (price * item.quantity);
+      return total + price * item.quantity;
     }, 0);
   };
 
@@ -337,7 +338,7 @@ const Cart = () => {
               className="bg-white rounded-2xl shadow-lg p-6"
             >
               <h2 className="text-2xl font-bold text-gray-900 mb-6">Cart Items ({items.length})</h2>
-              
+
               <div className="space-y-6">
                 {items.map((item, index) => (
                   <motion.div
@@ -349,7 +350,10 @@ const Cart = () => {
                   >
                     {item.product ? (
                       <img
-                        src={item.product.images?.[0] || 'https://images.pexels.com/photos/1301856/pexels-photo-1301856.jpeg'}
+                        src={
+                          item.product.image ||
+                          'https://images.pexels.com/photos/1301856/pexels-photo-1301856.jpeg'
+                        }
                         alt={item.product.name}
                         className="w-20 h-20 object-cover rounded-lg"
                       />
@@ -358,7 +362,7 @@ const Cart = () => {
                         <span className="text-green-600 font-bold">TK</span>
                       </div>
                     )}
-                    
+
                     <div className="flex-1">
                       {item.product ? (
                         <>
@@ -369,7 +373,8 @@ const Cart = () => {
                         <>
                           <h3 className="text-lg font-semibold text-gray-900">Custom TerraKit</h3>
                           <p className="text-gray-600">
-                            {item.terrakit?.numberOfPots} pots with {item.terrakit?.pots?.map(pot => pot.plantType).join(', ') || 'plants'}
+                            {item.terrakit?.numberOfPots} pots with{' '}
+                            {item.terrakit?.pots?.map((pot) => pot.plantType).join(', ') || 'plants'}
                           </p>
                           <div className="flex flex-wrap gap-1 mt-1">
                             {item.terrakit?.dripSystem?.enabled && (
@@ -394,7 +399,7 @@ const Cart = () => {
                         ₹{(item.product?.price || item.terrakit?.totalPrice || 0).toLocaleString()}
                       </p>
                     </div>
-                    
+
                     <div className="flex items-center space-x-3">
                       <button
                         onClick={() => handleUpdateQuantity(item._id, item.quantity - 1)}
@@ -410,7 +415,7 @@ const Cart = () => {
                         <Plus className="h-4 w-4" />
                       </button>
                     </div>
-                    
+
                     <button
                       onClick={() => handleRemoveItem(item._id)}
                       className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
@@ -432,7 +437,7 @@ const Cart = () => {
               className="bg-white rounded-2xl shadow-lg p-6 sticky top-24"
             >
               <h2 className="text-2xl font-bold text-gray-900 mb-6">Order Summary</h2>
-              
+
               <div className="space-y-4 mb-6">
                 <div className="flex justify-between">
                   <span className="text-gray-600">Subtotal</span>
@@ -444,7 +449,9 @@ const Cart = () => {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">Tax</span>
-                  <span className="font-semibold">₹{Math.round(calculateTotal() * 0.18).toLocaleString()}</span>
+                  <span className="font-semibold">
+                    ₹{Math.round(calculateTotal() * 0.18).toLocaleString()}
+                  </span>
                 </div>
                 <div className="border-t pt-4">
                   <div className="flex justify-between">
@@ -455,14 +462,14 @@ const Cart = () => {
                   </div>
                 </div>
               </div>
-              
+
               <button
                 onClick={() => navigate('/checkout', { state: { cartTotal: calculateTotal() } })}
                 className="w-full bg-green-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-green-700 transition-colors mb-4"
               >
                 Proceed to Checkout
               </button>
-              
+
               <Link
                 to="/terrastore"
                 className="block text-center text-green-600 hover:text-green-700 font-medium"

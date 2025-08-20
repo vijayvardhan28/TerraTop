@@ -8,6 +8,13 @@ import {
   User 
 } from '../../types';
 
+// Define a new interface for the successful OTP request payload
+interface RequestOTPPayload {
+  message: string;
+  email: string;
+  tempUser: RegisterCredentials;
+}
+
 // Async thunks
 export const loginUser = createAsyncThunk(
   'auth/login',
@@ -27,9 +34,10 @@ export const requestRegisterOTP = createAsyncThunk(
   async (userData: RegisterCredentials, { rejectWithValue }) => {
     try {
       const response = await api.post<{ message: string; email: string }>('/auth/request-register-otp', userData);
-      // Store email to localStorage for verification page usage
+      // Store the email and the full user data in local storage
       localStorage.setItem('tempEmail', userData.email);
-      return response.data;
+      // We will now return the full user data along with the response
+      return { message: response.data.message, email: userData.email, tempUser: userData };
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'OTP request failed');
     }
@@ -142,8 +150,9 @@ const authSlice = createSlice({
         state.isLoading = true;
         state.error = null;
       })
-      .addCase(requestRegisterOTP.fulfilled, (state, action: PayloadAction<{ message: string; email: string }>) => {
+      .addCase(requestRegisterOTP.fulfilled, (state, action: PayloadAction<RequestOTPPayload>) => {
         state.isLoading = false;
+        // Store the full temporary user data for resend functionality
         state.registrationData = action.payload;
       })
       .addCase(requestRegisterOTP.rejected, (state, action) => {
@@ -160,6 +169,7 @@ const authSlice = createSlice({
         state.user = action.payload.user;
         state.token = action.payload.token;
         state.isAuthenticated = true;
+        // Clear the temporary registration data after successful verification
         state.registrationData = null;
       })
       .addCase(verifyRegisterOTP.rejected, (state, action) => {
